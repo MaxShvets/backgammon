@@ -1,26 +1,10 @@
 import copy
 from dataclasses import dataclass
-from enum import Enum
-from typing import Optional, Tuple, List, Iterable, Dict
+from typing import Optional, List, Dict
+
+from types_ import Color
 
 TOTAL_PIECES = 15
-
-CellNum = int
-StepLen = int
-Step = Tuple[CellNum, StepLen]
-Move = Tuple[Step, ...]
-
-
-class Color(Enum):
-    LIGHT = 1
-    DARK = 2
-
-    @property
-    def opposite(self) -> "Color":
-        if self == Color.LIGHT:
-            return Color.DARK
-        else:
-            return Color.LIGHT
 
 
 @dataclass
@@ -51,65 +35,32 @@ class Board:
     def __copy__(self):
         return Board([copy.copy(cell) for cell in self._cells])
 
-    def find_steps(
-        self, color: Color, length: int
-    ) -> List[Step]:
-        steps = []
-
-        for i, cell in enumerate(self._cells):
+    def find_movable_pieces(self, color: Color, move_length: int):
+        return [
+            i
+            for i, cell in enumerate(self._cells)
             if (
                 cell.color == color
-                and self._cells[i + length].color != color.opposite
-            ):
-                steps.append((i, length))
+                and self._cells[i + move_length].color != color.opposite
+            )
+        ]
 
-        return steps
-
-    def step(self, step: Step):
-        cell_num, length = step
-
-        assert 0 < length <= 6, "Invalid step length"
+    def move_piece(self, cell_num:int, move_length: int):
+        assert 0 < move_length <= 6, "Invalid move length"
 
         start_cell = self._cells[cell_num]
-        assert start_cell.n_pieces != 0, "Attempt to step from empty cell"
+        assert start_cell.n_pieces != 0, "Attempt to move from empty cell"
 
-        end_cell = self._cells[cell_num + length]
+        end_cell = self._cells[cell_num + move_length]
         assert \
             end_cell.color != start_cell.color.opposite, \
             "Attempt to step to opposite color"
 
-        step_color = start_cell.color
+        move_color = start_cell.color
 
         start_cell.n_pieces -= 1
         if start_cell.n_pieces == 0:
             start_cell.color = None
 
         end_cell.n_pieces += 1
-        end_cell.color = step_color
-
-    def _find_step_sequence(
-        self, color: Color, seq: Iterable[int]
-    ) -> List[Move]:
-        moves: List[Tuple[Move, Board]] = [((), self)]
-
-        for step_len in seq:
-            extended_moves = []
-
-            for move, board in moves:
-                steps = board.find_steps(color, step_len)
-
-                for step in steps:
-                    updated_board = copy.copy(board)
-                    updated_board.step(step)
-                    extended_move = move + (step,)
-                    extended_moves.append((extended_move, updated_board))
-
-            moves = extended_moves
-
-        return [move for move, _ in moves]
-
-    def find_moves(self, color: Color, dice: Tuple[int, int]) -> List[Move]:
-        return (
-            self._find_step_sequence(color, dice)
-            + self._find_step_sequence(color, reversed(dice))
-        )
+        end_cell.color = move_color

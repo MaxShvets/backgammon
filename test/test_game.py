@@ -2,7 +2,9 @@ from typing import Tuple, List
 
 import pytest
 
-from src.board import Board, Color, Move, Cell
+from src.game import Game
+from src.board import Board, Cell
+from types_ import Color, Move
 
 
 @pytest.mark.parametrize(
@@ -67,5 +69,6 @@ def test_find_moves(
     dice: Tuple[int, int],
     expected_moves: List[Move]
 ):
-    assert sorted(board.find_moves(color, dice)) == sorted(expected_moves)
+    game = Game(board)
+    assert sorted(game.find_moves(color, dice)) == sorted(expected_moves)
 
