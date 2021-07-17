@@ -101,6 +101,38 @@ from types_ import Color, Move, Piece
             ],
             id="multiple pieces light"
         ),
+        pytest.param(
+            Board.from_dict({0: Cell(2, Color.LIGHT)}),
+            Color.LIGHT,
+            (5, 3),
+            [
+                (
+                        (Piece(color=Color.LIGHT, position=0), 3),
+                        (Piece(color=Color.LIGHT, position=3), 5),
+                ),
+                (
+                        (Piece(color=Color.LIGHT, position=0), 5),
+                        (Piece(color=Color.LIGHT, position=5), 3),
+                ),
+            ],
+            id="multiple head pieces light"
+        ),
+        pytest.param(
+            Board.from_dict({12: Cell(2, Color.DARK)}),
+            Color.DARK,
+            (5, 3),
+            [
+                (
+                    (Piece(color=Color.DARK, position=12), 3),
+                    (Piece(color=Color.DARK, position=15), 5),
+                ),
+                (
+                    (Piece(color=Color.DARK, position=12), 5),
+                    (Piece(color=Color.DARK, position=17), 3),
+                ),
+            ],
+            id="multiple head pieces dark"
+        ),
     ]
 )
 def test_find_moves(
