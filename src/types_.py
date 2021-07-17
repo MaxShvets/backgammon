@@ -1,10 +1,6 @@
+from dataclasses import dataclass
 from enum import Enum
-from typing import Tuple
-
-CellNum = int
-StepLen = int
-Step = Tuple[CellNum, StepLen]
-Move = Tuple[Step, ...]
+from typing import Tuple, Optional
 
 
 class Color(Enum):
@@ -17,3 +13,21 @@ class Color(Enum):
             return Color.DARK
         else:
             return Color.LIGHT
+
+
+@dataclass
+class Piece:
+    color: Color
+    position: int
+
+
+CellNum = int
+StepLen = int
+Step = Tuple[Piece, StepLen]
+Move = Tuple[Step, ...]
+
+
+@dataclass
+class Cell:
+    n_pieces: int = 0
+    color: Optional[Color] = None

@@ -3,7 +3,7 @@ from typing import Dict, List
 import pytest
 
 from board import Cell, Board
-from types_ import Color
+from types_ import Color, Piece
 
 
 @pytest.mark.parametrize(
@@ -99,7 +99,10 @@ def test_can_move_piece(
             },
             Color.LIGHT,
             3,
-            [0, 2],
+            [
+                Piece(color=Color.LIGHT, position=0),
+                Piece(color=Color.LIGHT, position=2),
+            ],
             id="light moves, only light pieces"
         ),
         pytest.param(
@@ -110,7 +113,10 @@ def test_can_move_piece(
             },
             Color.LIGHT,
             3,
-            [0, 2],
+            [
+                Piece(color=Color.LIGHT, position=0),
+                Piece(color=Color.LIGHT, position=2),
+            ],
             id="light moves, dark pieces present"
         ),
         pytest.param(
@@ -121,7 +127,7 @@ def test_can_move_piece(
             },
             Color.LIGHT,
             3,
-            [0],
+            [Piece(color=Color.LIGHT, position=0)],
             id="light moves, dark pieces present and block light pieces"
         ),
         pytest.param(
@@ -131,7 +137,10 @@ def test_can_move_piece(
             },
             Color.DARK,
             3,
-            [0, 2],
+            [
+                Piece(color=Color.DARK, position=0),
+                Piece(color=Color.DARK, position=2),
+            ],
             id="dark moves, only dark pieces"
         ),
         pytest.param(
@@ -142,7 +151,7 @@ def test_can_move_piece(
             },
             Color.DARK,
             3,
-            [0],
+            [Piece(color=Color.DARK, position=0)],
             id="dark moves, light pieces present"
         ),
     ]

@@ -1,17 +1,10 @@
 import copy
-from dataclasses import dataclass
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Iterable
 
-from types_ import Color
+from types_ import Color, Cell, Piece
 
 TOTAL_PIECES = 15
 NUM_CELLS = 24
-
-
-@dataclass
-class Cell:
-    n_pieces: int = 0
-    color: Optional[Color] = None
 
 
 class Board:
@@ -52,9 +45,9 @@ class Board:
         target_cell = self._cells[target_cell_num]
         return target_cell.color != start_cell.color.opposite
 
-    def find_movable_pieces(self, color: Color, move_length: int):
+    def find_movable_pieces(self, color: Color, move_length: int) -> Iterable[Piece]:
         return [
-            i
+            Piece(color=color, position=i)
             for i, cell in enumerate(self._cells)
             if (
                 cell.color == color
@@ -62,13 +55,13 @@ class Board:
             )
         ]
 
-    def move_piece(self, cell_num:int, move_length: int):
+    def move_piece(self, piece: Piece, move_length: int):
         assert 0 < move_length <= 6, "Invalid move length"
 
-        start_cell = self._cells[cell_num]
+        start_cell = self._cells[piece.position]
         assert start_cell.n_pieces != 0, "Attempt to move from empty cell"
 
-        end_cell = self._cells[cell_num + move_length]
+        end_cell = self._cells[piece.position + move_length]
         assert \
             end_cell.color != start_cell.color.opposite, \
             "Attempt to step to opposite color"
