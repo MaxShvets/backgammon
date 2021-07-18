@@ -8,6 +8,8 @@ from types_ import Color, Move, Piece
 class Game:
     def __init__(self, board: Board):
         self._board = board
+        self._light_born_off_num = 0
+        self._dark_born_off_num = 0
 
     @staticmethod
     def is_head_piece(piece: Piece):
@@ -15,6 +17,16 @@ class Game:
             (piece.color == Color.LIGHT and piece.position == 0)
             or (piece.color == Color.DARK and piece.position == 12)
         )
+
+    def is_home(self, color: Color) -> bool:
+        last_piece = self._board.get_last_piece(color)
+        if not last_piece:
+            return False
+
+        if color == Color.LIGHT:
+            return 18 <= last_piece.position
+        else:
+            return 6 <= last_piece.position <= 11
 
     def _find_step_sequence(
         self, color: Color, seq: Iterable[int]
