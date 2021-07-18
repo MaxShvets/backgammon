@@ -165,3 +165,73 @@ def test_find_movable_pieces(
     board = Board.from_dict(board_state)
     pieces = board.find_movable_pieces(color, move_length)
     assert pieces == expected_result
+
+
+@pytest.mark.parametrize(
+    "board_state, color, expected_piece",
+    [
+        pytest.param({}, Color.LIGHT, None, id="empty board light"),
+        pytest.param(
+            {2: Cell(n_pieces=1, color=Color.LIGHT)},
+            Color.LIGHT,
+            Piece(color=Color.LIGHT, position=2),
+            id="one piece light"
+        ),
+        pytest.param(
+            {
+                2: Cell(n_pieces=1, color=Color.LIGHT),
+                4: Cell(n_pieces=2, color=Color.LIGHT),
+            },
+            Color.LIGHT,
+            Piece(color=Color.LIGHT, position=2),
+            id="multiple light pieces light"
+        ),
+        pytest.param(
+            {
+                1: Cell(n_pieces=2, color=Color.DARK),
+                2: Cell(n_pieces=1, color=Color.LIGHT),
+                4: Cell(n_pieces=2, color=Color.LIGHT),
+                7: Cell(n_pieces=1, color=Color.DARK),
+            },
+            Color.LIGHT,
+            Piece(color=Color.LIGHT, position=2),
+            id="multiple mixed pieces light"
+        ),
+        pytest.param({}, Color.DARK, None, id="empty board dark"),
+        pytest.param(
+            {2: Cell(n_pieces=1, color=Color.DARK)},
+            Color.DARK,
+            Piece(color=Color.DARK, position=2),
+            id="one piece dark"
+        ),
+        pytest.param(
+            {
+                2: Cell(n_pieces=1, color=Color.DARK),
+                4: Cell(n_pieces=2, color=Color.DARK),
+            },
+            Color.DARK,
+            Piece(color=Color.DARK, position=2),
+            id="multiple light pieces dark"
+        ),
+        pytest.param(
+            {
+                1: Cell(n_pieces=2, color=Color.DARK),
+                2: Cell(n_pieces=1, color=Color.LIGHT),
+                4: Cell(n_pieces=2, color=Color.LIGHT),
+                7: Cell(n_pieces=1, color=Color.DARK),
+                13: Cell(n_pieces=2, color=Color.DARK),
+            },
+            Color.DARK,
+            Piece(color=Color.DARK, position=13),
+            id="multiple mixed pieces dark"
+        ),
+    ]
+)
+def test_get_last_piece(
+    board_state: Dict[int, Cell],
+    color: Color,
+    expected_piece: Piece,
+):
+    board = Board.from_dict(board_state)
+    actual_piece = board.get_last_piece(color)
+    assert actual_piece == expected_piece
