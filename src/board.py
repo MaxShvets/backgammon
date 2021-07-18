@@ -65,14 +65,18 @@ class Board:
         target_cell = self._cells[target_cell_num]
         return target_cell.color != start_cell.color.opposite
 
-    def find_movable_pieces(self, color: Color, move_length: int) -> Iterable[Piece]:
-        return [
+    def get_pieces(self, color: Color) -> Iterable[Piece]:
+        return (
             Piece(color=color, position=i)
             for i, cell in enumerate(self._cells)
-            if (
-                cell.color == color
-                and self._cells[i + move_length].color != color.opposite
-            )
+            if cell.n_pieces != 0 and cell.color == color
+        )
+
+    def find_movable_pieces(self, color: Color, move_length: int) -> Iterable[Piece]:
+        return [
+            piece
+            for piece in self.get_pieces(color)
+            if self.can_move_piece(piece, move_length)
         ]
 
     def move_piece(self, piece: Piece, move_length: int):
