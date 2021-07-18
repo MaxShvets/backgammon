@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import pytest
 
@@ -235,3 +235,31 @@ def test_get_last_piece(
     board = Board.from_dict(board_state)
     actual_piece = board.get_last_piece(color)
     assert actual_piece == expected_piece
+
+
+@pytest.mark.parametrize(
+    "position, expected_piece",
+    [
+        pytest.param(0, None, id="no piece"),
+        pytest.param(
+            2,
+            Piece(color=Color.LIGHT, position=2),
+            id="no piece"
+        ),
+        pytest.param(
+            4,
+            Piece(color=Color.DARK, position=4),
+            id="no piece"
+        )
+    ]
+)
+def test_get_top_piece(
+    position: int,
+    expected_piece: Optional[Piece],
+):
+    board = Board.from_dict({
+        2: Cell(n_pieces=2, color=Color.LIGHT),
+        4: Cell(n_pieces=4, color=Color.DARK),
+    })
+    piece = board.get_piece(position)
+    assert piece == expected_piece

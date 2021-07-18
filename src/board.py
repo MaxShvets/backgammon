@@ -34,6 +34,16 @@ class Board:
     def from_dict(cls, board_state: Dict[int, Cell]) -> "Board":
         return cls(cells=[board_state.get(i, Cell()) for i in range(24)])
 
+    def get_piece(self, position: int) -> Optional[Piece]:
+        assert 0 <= position <= 23, "unexpected position"
+
+        cell = self._cells[position]
+
+        if cell.n_pieces == 0:
+            return None
+        else:
+            return Piece(color=cell.color, position=position)
+
     def __copy__(self):
         return Board([copy.copy(cell) for cell in self._cells])
 
