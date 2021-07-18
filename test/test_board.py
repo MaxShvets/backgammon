@@ -7,7 +7,7 @@ from types_ import Color, Piece
 
 
 @pytest.mark.parametrize(
-    "board_state, piece, move_length, expected_result",
+    "board_state, position, move_length, expected_result",
     [
         pytest.param(
             {0: Cell(n_pieces=1, color=Color.LIGHT)},
@@ -75,16 +75,17 @@ from types_ import Color, Piece
             3,
             False,
             id="move light piece over dark edge",
-        )
+        ),
     ]
 )
 def test_can_move_piece(
     board_state: Dict[int, Cell],
-    piece: int,
+    position: int,
     move_length: int,
     expected_result: bool,
 ):
     board = Board.from_dict(board_state)
+    piece = board.get_piece(position)
     pieces = board.can_move_piece(piece, move_length)
     assert pieces == expected_result
 

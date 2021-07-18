@@ -47,16 +47,18 @@ class Board:
     def __copy__(self):
         return Board([copy.copy(cell) for cell in self._cells])
 
-    def can_move_piece(self, piece: int, move_length: int) -> bool:
+    def can_move_piece(self, piece: Piece, move_length: int) -> bool:
         assert move_length != 0, "0-cell moves are prohibited"
+        assert \
+            self._cells[piece.position].n_pieces != 0, \
+            "provided piece doesn't exist"
 
-        start_cell_num = piece
-        start_cell = self._cells[start_cell_num]
-        target_cell_num = (piece + move_length) % NUM_CELLS
+        start_cell = self._cells[piece.position]
+        target_cell_num = (piece.position + move_length) % NUM_CELLS
 
         if (
             start_cell.color == Color.LIGHT
-            and target_cell_num <= start_cell_num
+            and target_cell_num <= piece.position
         ):
             return False
 
