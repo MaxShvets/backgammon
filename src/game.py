@@ -56,12 +56,18 @@ class Game:
                         )
                     )
 
+            if not extended_moves:
+                break
+
             moves = extended_moves
 
         return [move for move, _, __ in moves]
 
     def find_moves(self, color: Color, dice: Tuple[int, int]) -> List[Move]:
-        return (
+        moves = (
             self._find_step_sequence(color, dice)
             + self._find_step_sequence(color, reversed(dice))
         )
+        max_move_len = max(len(move) for move in moves)
+
+        return [move for move in moves if move and len(move) == max_move_len]

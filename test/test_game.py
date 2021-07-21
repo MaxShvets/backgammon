@@ -133,6 +133,55 @@ from types_ import Color, Move, Piece
             ],
             id="multiple head pieces dark"
         ),
+        pytest.param(
+            Board.from_dict({
+                0: Cell(1, Color.LIGHT),
+                8: Cell(1, Color.DARK),
+            }),
+            Color.LIGHT,
+            (5, 3),
+            [
+                ((Piece(color=Color.LIGHT, position=0), 3),),
+                ((Piece(color=Color.LIGHT, position=0), 5),),
+            ],
+            id="light: partial moves",
+        ),
+        pytest.param(
+            Board.from_dict({
+                0: Cell(1, Color.LIGHT),
+                1: Cell(1, Color.LIGHT),
+                8: Cell(1, Color.DARK),
+            }),
+            Color.LIGHT,
+            (5, 3),
+            [
+                (
+                    (Piece(color=Color.LIGHT, position=1), 3),
+                    (Piece(color=Color.LIGHT, position=4), 5),
+                ),
+                (
+                    (Piece(color=Color.LIGHT, position=1), 5),
+                    (Piece(color=Color.LIGHT, position=6), 3),
+                ),
+                (
+                    (Piece(color=Color.LIGHT, position=0), 3),
+                    (Piece(color=Color.LIGHT, position=1), 5),
+                ),
+                (
+                    (Piece(color=Color.LIGHT, position=1), 5),
+                    (Piece(color=Color.LIGHT, position=0), 3),
+                ),
+                (
+                    (Piece(color=Color.LIGHT, position=0), 5),
+                    (Piece(color=Color.LIGHT, position=1), 3),
+                ),
+                (
+                    (Piece(color=Color.LIGHT, position=1), 3),
+                    (Piece(color=Color.LIGHT, position=0), 5),
+                ),
+            ],
+            id="light: partial and full moves",
+        ),
     ]
 )
 def test_find_moves(
@@ -216,10 +265,6 @@ def test_find_moves(
             True,
             id="light: all pieces home dark mixed in"
         ),
-
-
-
-
         pytest.param(
             Board.from_dict({}),
             Color.DARK,
